@@ -1,0 +1,11 @@
+{
+  "name": "nodestuff",
+  "version": "1.0.0",
+  "description": "gmailtest",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Juan the man",
+  "license": "ISC"
+}
