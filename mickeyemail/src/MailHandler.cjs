@@ -15,8 +15,8 @@ async function main() {
     port: 465,
     secure: true,
     auth: {
-      user: "***REMOVED***",
-      pass: "***REMOVED***",
+      user: "",
+      pass: "",
     },
   });
 
