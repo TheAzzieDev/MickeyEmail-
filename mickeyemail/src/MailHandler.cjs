@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 const test = require("nodemailer");
 
 const html = `
@@ -15,8 +17,8 @@ async function main() {
     port: 465,
     secure: true,
     auth: {
-      user: "",
-      pass: "",
+      user: process.env.EMAIL_ADRESS,
+      pass: process.env.EMAIL.APP.PASS,
     },
   });
 
