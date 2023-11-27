@@ -1,4 +1,4 @@
-import "dotenv/config"
+require("dotenv/config");
 
 const test = require("nodemailer");
 
@@ -8,17 +8,17 @@ const html = `
     <div>wasssuup<div>
     `;
 const emails = [
-  "***REMOVED***",
-  "***REMOVED***",
+  process.env.EMAIL_RECIEVER_1,
+  process.env.EMAIL_RECIEVER_2,
 ];
 async function main() {
   const transponder = test.createTransport({
-    host: "smtp.gmail.com",
+    host: process.env.HOST,
     port: 465,
     secure: true,
     auth: {
       user: process.env.EMAIL_ADRESS,
-      pass: process.env.EMAIL.APP.PASS,
+      pass: process.env.EMAIL_APP_PASS,
     },
   });
 
@@ -26,7 +26,7 @@ async function main() {
   //för att lägga bilden som en attachment ange inte ett cid och lägg den inte i html variablen
   //för attt lägga bild i meddelendet lägg ett cid och sedan bild tag som som innehåller cid innuti src taggen.
   const info = await transponder.sendMail({
-    from: "Azzie <***REMOVED***>",
+    from: process.env.EMAIL_RECIEVER_1,
     to: emails,
     subject: "hey, hello",
     html: html,
