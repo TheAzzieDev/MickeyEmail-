@@ -1,6 +1,12 @@
 require("dotenv/config");
 
 const test = require("nodemailer");
+const express = require("express");
+const app = express();
+const PORT = 8080;
+app.use(require("cors")());
+
+app.use(express.json());
 
 const html = `
     <h1>hello</h1>
