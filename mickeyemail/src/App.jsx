@@ -53,7 +53,7 @@ function App() {
         <section className="grid-callender">
           <div className="callender">
             <h2>Date of return</h2>
-           {/*<input type="datetime-local" id="tiddatum"/>*/}
+           <input type="datetime-local" id="tiddatum"/>
             <table>
               <thead>
                 <tr>
