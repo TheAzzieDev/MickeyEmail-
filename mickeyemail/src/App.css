@@ -6,22 +6,74 @@
 }
 
 .wrapper{
-  border: solid red 5px;
   display: flex;
+  border: solid whitesmoke 5px;
+  border-radius: 10px;
 }
 
 .grid-containera-info{
-  border: solid white 5px;
   margin: 5px 50px 5px 0px;
+  width: fit-content;
 }
 
-.input{
+.inputs{
   display: grid;
   margin: 5px;
 }
 
-.ButtonDiv{
+.from{
+  margin-top: 5px;
+}
+
+.to{
+  margin-top: 5px;
+}
+
+.latest{
+  margin-top: 5px;
+}
+
+#notification{
   display: flex;
-  margin: 0px auto;
-  align-items: space-around;
+  margin: 5px 50px;
+}
+
+#count{
+  position: relative;
+  right: 25px;
+  top: 17px;
+}
+
+.amount{
+  position: relative;
+  right: 50px;
+}
+
+.button-amount1{
+  position: relative;
+  right: 5px;
+  height: 20px;
+  top: 20px;
+}
+
+.button-amount2{
+  position: relative;
+  left: 5px;
+  height: 20px;
+  top: 20px;
+}
+
+.context {
+  height: 70px;
+  margin-bottom: 5px;
+}
+
+.context::placeholder{
+  position: relative;
+  bottom: 20px;
+}
+
+.callender{
+  margin: 5px 50px 5px 0px;
+  width: fit-content;
 }
