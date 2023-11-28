@@ -7,10 +7,7 @@ const html = `
     <img src = "cid:whatever" width = "400"/>
     <div>wasssuup<div>
     `;
-const emails = [
-  process.env.EMAIL_RECIEVER_1,
-  process.env.EMAIL_RECIEVER_2,
-];
+const emails = [process.env.EMAIL_RECIEVER_1, process.env.EMAIL_RECIEVER_2];
 async function main() {
   const transponder = test.createTransport({
     host: process.env.HOST,
@@ -46,51 +43,108 @@ async function main() {
   console.log("accepted: " + info.accepted);
   console.log("rejected: " + info.rejected);
 }
-var x;
-const readlin = require("readline");
-readline = readlin.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
 
-/*
-readline.question("What is your name?", (name) => {
-  console.log(`Hello, ${name}!`);
-  readline.close();
-});
-x = parseInt(x);
-*/
+var now;
+var endDate;
+var sendDate;
+var firstMailSent;
+var daysBetween;
+var hours;
+var minutes;
+var days;
+var months;
+var years;
 
-var SetDate = new Date();
-var input;
+function SetSendDates(dagar, dayvar) {
+  days =
+    sendDate.getDate() + dagar > dayvar
+      ? sendDate.getDate() + dagar - dayvar
+      : sendDate.getDate() + dagar;
 
-async function SetExpired(x) {
-  SetDate.setSeconds(SetDate.getSeconds() + x);
+  if (sendDate.getDate() + dagar > dayvar) {
+    months = sendDate.getMonth() + 1 > 12 ? 0 : sendDate.getMonth() + 1;
+  }
+  years =
+    sendDate.getMonth() + 1 > 11 && sendDate.getDate() + dagar > dayvar
+      ? sendDate.getFullYear() + 1
+      : sendDate.getFullYear();
 }
 
-function questionAsync(prompt) {
-  return new Promise((resolve) => {
-    readline.question(prompt, resolve);
-  });
+function IncreaseMail2(dagar) {
+  if (sendDate.getFullYear() % 4 != 0 && sendDate.getMonth() == 1) {
+    SetSendDates(dagar, 28);
+  } else if (sendDate.getFullYear() % 4 == 0 && sendDate.getMonth() == 1) {
+    SetSendDates(dagar, 29);
+  } else {
+    if (
+      sendDate.getMonth() == 0 ||
+      sendDate.getMonth() == 2 ||
+      sendDate.getMonth() == 4 ||
+      sendDate.getMonth() == 6 ||
+      sendDate.getMonth() == 7 ||
+      sendDate.getMonth() == 9 ||
+      sendDate.getMonth() == 11
+    ) {
+      SetSendDates(dagar, 31);
+    } else if (
+      sendDate.getMonth() == 3 ||
+      sendDate.getMonth() == 5 ||
+      sendDate.getMonth() == 8 ||
+      sendDate.getMonth() == 10
+    ) {
+      SetSendDates(dagar, 30);
+    }
+  }
+  sendDate.setMinutes(minutes);
+  sendDate.setHours(hours);
+  sendDate.setDate(days);
+  sendDate.setMonth(months);
+  sendDate.setFullYear(years);
 }
 
-function sendMail() {
-  var now = new Date();
-  console.log(SetDate - now);
-  if (SetDate - now < 0) {
+async function sendMail() {
+  now.setDate(now.getDate() + 1);
+  console.log(
+    now.toLocaleString() +
+      " loop should have ended " +
+      sendDate.toLocaleString()
+  );
+  if (sendDate - now < 0 && !firstMailSent) {
     main().catch((e) => console.log(e));
-    SetDate = new Date();
-    SetDate.setSeconds(SetDate.getSeconds() + input);
+    IncreaseMail2(daysBetween);
+    firstMailSent = true;
+  } else if (sendDate - now < 0 && firstMailSent && !(endDate - now < 0)) {
+    main().catch((e) => console.log(e));
+    console.log(sendDate.toLocaleString());
+    IncreaseMail2(daysBetween);
   }
 }
 
-async function test2() {
-  input = await questionAsync("Input Time: ");
-  input = parseInt(input);
-  await SetExpired(input);
-  StartTimer();
-}
-test2();
 function StartTimer() {
-  setInterval(sendMail, 100);
+  setInterval(sendMail, 700);
 }
+
+app.post("/start", (req, res) => {
+  console.log(JSON.parse(req.body));
+  endDate = new Date();
+  sendDate = new Date();
+
+  endDate.setFullYear(JSON.parse(req.body).endDateYear);
+  endDate.setMonth(JSON.parse(req.body).endDateMonth);
+  endDate.setDate(JSON.parse(req.body).endDateDay);
+
+  sendDate.setFullYear(JSON.parse(req.body).sendDateYear);
+  sendDate.setMonth(JSON.parse(req.body).sendDateMonth);
+  sendDate.setDate(JSON.parse(req.body).sendDateDay);
+
+  console.log(" " + sendDate.toLocaleString());
+  daysBetween = JSON.parse(req.body).daysBetween;
+  hours = JSON.parse(req.body).hours;
+  minutes = JSON.parse(req.body).minutes;
+  res.json({ cred: "crediantials has been processed" });
+  StartTimer();
+});
+
+app.listen(PORT, () =>
+  console.log("server is running on http://localhost:" + PORT)
+);

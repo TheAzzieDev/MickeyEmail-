@@ -43,10 +43,8 @@ function App() {
               <button className="button-amount2" onClick={OnDecrementClick}>
                 -
               </button>
-
             </div>
             <input type="text" placeholder="Context:" className="context" />
-
           </div>
         </section>
 
@@ -54,6 +52,7 @@ function App() {
           <h2>Date of return</h2>
           <input type="datetime-local" id="tiddatum" />
         </div>
+        <button onClick={() => {}}>Send To Recipiecent</button>
       </div>
     </>
   );
