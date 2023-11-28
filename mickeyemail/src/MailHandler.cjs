@@ -33,12 +33,12 @@ async function main() {
     attachments: [
       {
         filename: "cat.jpg",
-        path: "./assets/cat.jpg",
+        path: "./src/assets/cat.jpg",
         cid: "whatever",
       },
       {
         filename: "cat2.jpg",
-        path: "./assets/cat2.jpg",
+        path: "./src/assets/cat2.jpg",
       },
     ],
   });
