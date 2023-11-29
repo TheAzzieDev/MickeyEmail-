@@ -27,7 +27,7 @@ function App() {
           <div className="inputs">
             <input type="text" placeholder="From:" className="from" />
             <input type="text" placeholder="To:" className="to" />
-            <input type="text" placeholder="Latest:" className="latest" />
+            <input type="text" placeholder="Subject:" className="subject" />
 
             <div id="notification">
               <p className="amount">Notification amount</p>
@@ -44,9 +44,12 @@ function App() {
                 -
               </button>
             </div>
-            <input type="text" placeholder="Context:" className="context" />
+            <textarea placeholder="Context:" className="context" />
+
           </div>
         </section>
+
+        <button id="send">Send</button>
 
         <div className="callender">
           <h2>Date of return</h2>

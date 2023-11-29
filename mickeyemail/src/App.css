@@ -29,7 +29,7 @@
   margin-top: 5px;
 }
 
-.latest{
+.subject{
   margin-top: 5px;
 }
 
@@ -68,12 +68,14 @@
   margin-bottom: 5px;
 }
 
-.context::placeholder{
-  position: relative;
-  bottom: 20px;
-}
-
 .callender{
   margin: 5px 50px 5px 0px;
   width: fit-content;
+}
+
+#send{
+  margin: auto;
+  position: absolute;
+  bottom: 170px;
+  right: 180px;
 }
