@@ -134,6 +134,7 @@ app.post("/start", (req, res) => {
   console.log(JSON.parse(req.body));
   endDate = new Date();
   sendDate = new Date();
+  now = new Date();
 
   endDate.setFullYear(JSON.parse(req.body).endDateYear);
   endDate.setMonth(JSON.parse(req.body).endDateMonth);
