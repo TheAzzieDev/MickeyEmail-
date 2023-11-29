@@ -1,4 +1,4 @@
-// import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./App.css";
 import "./index.css";
@@ -20,13 +20,42 @@ function App() {
   //   [count]
   // );
 
+  const [inputData, setInputData] = useState ('');
+
+  const [dataList, setDataList] = useState (()=>{
+    const storedData=localStorage.getItem('dataList');
+    return storedData ? JSON.parse(storedData): [];
+  });
+
+  const handleInputChange=(event) => {
+    setInputData(event.target.value);
+  };
+
+  const handleButtonClick = () => {
+    setDataList((prevList) => [...prevList, inputData]);
+
+    setInputData('');
+  }
+
+  const handleCheckboxClick=(index)=>{
+    setDataList((prevList)=>{
+      const updatedList=[...prevList];
+      updatedList.splice(index,1);
+      return updatedList;
+    });
+  };
+
+  useEffect (()=>{
+    localStorage.setItem('dataList', JSON.stringify(dataList));
+  },[dataList]);
+ 
   return (
     <>
       <div className="wrapper">
         <section className="grid-containera-info">
           <div className="inputs">
             <input type="text" placeholder="From:" className="from" />
-            <input type="text" placeholder="To:" className="to" />
+            <input type="text" placeholder="To:" className="to" value={inputData} onChange={handleInputChange}/>
             <input type="text" placeholder="Subject:" className="subject" />
 
             {/* <div id="notification">
@@ -57,11 +86,13 @@ function App() {
         <wrapper id="datalist">
           <h3>Open tasks:</h3>
           <ul>
-            
+            {dataList.map((item,index) =>(
+              <li key="index">{item} <input type="checkbox" onChange={()=>handleCheckboxClick(index)}></input></li>
+            ))}
           </ul>
         </wrapper>
         
-        <button id="send">Send</button>
+        <button id="send" onClick={handleButtonClick}>Send</button>
 
         <wrapper id="upload">
           <form action="/upload" method="post" enctype="multipart/form-data">
