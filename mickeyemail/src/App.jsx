@@ -48,6 +48,19 @@ function App() {
           </div>
         </section>
 
+        
+        <div className="callender">
+          <h2>Date of return</h2>
+          <input type="datetime-local" id="tiddatum" />
+        </div>
+
+        <wrapper id="datalist">
+          <h3>Open tasks:</h3>
+          <ul>
+            
+          </ul>
+        </wrapper>
+        
         <button id="send">Send</button>
 
         <wrapper id="upload">
@@ -63,22 +76,6 @@ function App() {
           </form>
         </wrapper>
 
-        <div className="callender">
-          <h2>Date of return</h2>
-          <input type="datetime-local" id="tiddatum" />
-        </div>
-
-        <wrapper id="datalist">
-          <label for="browser">Choose your finnished tasks?:</label>
-          <input list="browsers" name="browser" id="browser"></input>
-          <datalist id="browsers">
-            <option value="Edge" />
-            <option value="Firefox" />
-            <option value="Chrome" />
-            <option value="Opera" />
-            <option value="Safari" />
-          </datalist>
-        </wrapper>
       </div>
     </>
   );
