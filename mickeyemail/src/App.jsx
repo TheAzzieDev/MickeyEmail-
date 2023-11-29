@@ -21,6 +21,7 @@ function App() {
   // );
 
   const [inputData, setInputData] = useState ('');
+  const [inputData2, setInputData2] = useState('');
 
   const [dataList, setDataList] = useState (()=>{
     const storedData=localStorage.getItem('dataList');
@@ -31,10 +32,16 @@ function App() {
     setInputData(event.target.value);
   };
 
+  const handleInputChange2=(event) => {
+    setInputData2(event.target.value);
+  };
+
   const handleButtonClick = () => {
-    setDataList((prevList) => [...prevList, inputData]);
+    const combinedData = `${inputData} - ${inputData2}`;
+    setDataList((prevList) => [...prevList, combinedData]);
 
     setInputData('');
+    setInputData2('');
   }
 
   const handleCheckboxClick=(index)=>{
@@ -56,7 +63,7 @@ function App() {
           <div className="inputs">
             <input type="text" placeholder="From:" className="from" />
             <input type="text" placeholder="To:" className="to" value={inputData} onChange={handleInputChange}/>
-            <input type="text" placeholder="Subject:" className="subject" />
+            <input type="text" placeholder="Subject:" className="subject" value={inputData2} onChange={handleInputChange2} />
 
             {/* <div id="notification">
               <p className="amount">Notification amount</p>
