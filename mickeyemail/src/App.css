@@ -66,6 +66,7 @@
 .context {
   height: 70px;
   margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .callender{
@@ -76,6 +77,31 @@
 #send{
   margin: auto;
   position: absolute;
-  bottom: 170px;
-  right: 180px;
+  bottom: 210px;
+  right: 173px;
+}
+
+#upload{
+  width: 25%;
+  position: absolute;
+  right: 210px;
+  bottom: 210px;
+}
+
+#fileInput{
+  width: 60%;
+}
+
+.upload-btn{
+  border: solid green 5px;
+}
+
+#datalist{
+  height: fit-content;
+  margin-top: 50px;
+}
+
+#browser{
+  margin-left: 5px;
+  margin-right: 5px;
 }
