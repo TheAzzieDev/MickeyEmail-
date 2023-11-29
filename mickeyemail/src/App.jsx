@@ -75,6 +75,23 @@ function App() {
             </div> */}
             <textarea placeholder="Context:" className="context" />
           </div>
+
+        <wrapper>
+          <button id="send" onClick={handleButtonClick}>Send</button>
+        </wrapper>
+        
+        <wrapper id="upload">
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            {/* <label for="fileInput">Choose a file:</label> */}
+            <input
+              type="file"
+              id="fileInput"
+              name="fileInput"
+              accept=".jpg, .jpeg, .png, .gif, pdf"
+            ></input>
+            {/* <button type="submit" className="upload-btn">Upload</button> */}
+          </form>
+        </wrapper>
         </section>
 
         
@@ -90,21 +107,6 @@ function App() {
               <li key="index">{item} <input type="checkbox" onChange={()=>handleCheckboxClick(index)}></input></li>
             ))}
           </ul>
-        </wrapper>
-        
-        <button id="send" onClick={handleButtonClick}>Send</button>
-
-        <wrapper id="upload">
-          <form action="/upload" method="post" enctype="multipart/form-data">
-            {/* <label for="fileInput">Choose a file:</label> */}
-            <input
-              type="file"
-              id="fileInput"
-              name="fileInput"
-              accept=".jpg, .jpeg, .png, .gif, pdf"
-            ></input>
-            {/* <button type="submit" className="upload-btn">Upload</button> */}
-          </form>
         </wrapper>
 
       </div>
