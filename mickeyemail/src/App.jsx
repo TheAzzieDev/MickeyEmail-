@@ -3,13 +3,19 @@ import "./App.css";
 import "./index.css";
 
 function App() {
+  const [inputData0, setInputData0] = useState('');
   const [inputData, setInputData] = useState('');
   const [inputData2, setInputData2] = useState('');
+  const [inputData3, setInputData3] = useState('');
   const [selectedDateTime, setSelectedDateTime] = useState('');
   const [dataList, setDataList] = useState(() => {
     const storedData = localStorage.getItem('dataList');
     return storedData ? JSON.parse(storedData) : [];
   });
+
+  const handleInputChange0=(event) =>{
+    setInputData0(event.target.value);
+  }
 
   const handleInputChange = (event) => {
     setInputData(event.target.value);
@@ -19,11 +25,16 @@ function App() {
     setInputData2(event.target.value);
   };
 
+  const handleInputChange3=(event)=>{
+    setInputData3(event.target.value);
+  }
+
   const handleDateTimeChange = (event) => {
     setSelectedDateTime(event.target.value);
   };
 
   const handleButtonClick = () => {
+    if(inputData!="" && inputData2!="" && selectedDateTime!=""){
     const selectedDate = new Date(selectedDateTime);
 
     const year = selectedDate.getFullYear();
@@ -35,9 +46,15 @@ function App() {
     const combinedData = `${inputData} - ${inputData2} - ${year}:${month}:${day}-${hour}:${minute}`;
 
     setDataList((prevList) => [...prevList, combinedData]);
+    setInputData0('');
     setInputData('');
     setInputData2('');
+    setInputData3('');
     setSelectedDateTime('');
+    }
+    else{
+      alert("Var vänlig fyll i alla rutor och försök igen :)");
+    }
   };
 
   const handleCheckboxClick = (index) => {
@@ -57,27 +74,27 @@ function App() {
       <div className="wrapper">
         <section className="grid-containera-info">
           <div className="inputs">
-            <input type="text" placeholder="From:" className="from" />
+            <input type="text" placeholder="Från:" className="from"  value={inputData0} onChange={handleInputChange0}/>
             <input
               type="text"
-              placeholder="To:"
+              placeholder="Till:"
               className="to"
               value={inputData}
               onChange={handleInputChange}
             />
             <input
               type="text"
-              placeholder="Subject:"
+              placeholder="Titel:"
               className="subject"
               value={inputData2}
               onChange={handleInputChange2}
             />
-            <textarea placeholder="Context:" className="context" />
+            <textarea placeholder="Innehåll:" className="context" value={inputData3} onChange={handleInputChange3}/>
           </div>
 
           <div>
             <button id="send" onClick={handleButtonClick}>
-              Send
+              Skicka
             </button>
           </div>
 
@@ -94,7 +111,7 @@ function App() {
         </section>
 
         <div className="callender">
-          <h2>Date of return</h2>
+          <h2>Svara senast:</h2>
           <input
             type="datetime-local"
             id="tiddatum"
@@ -104,7 +121,7 @@ function App() {
         </div>
 
         <div id="datalist">
-          <h3>Open tasks:</h3>
+          <h3>Pågående:</h3>
           <ul>
             {dataList.map((item, index) => (
               <li key={index}>

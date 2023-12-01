@@ -75,10 +75,27 @@
 }
 
 #send{
+  border: none;
+  border-radius: 10px;
+  background-color: blueviolet;
+  height: 2rem;
+  width: 5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transform: 0.2s ease;
+}
+
+#send:hover{
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.541);
+}
+
+#send:active{
+  box-shadow: 0 2px rgb(90, 90, 90);
+  transform: 0.1s ease;
 }
 
 #upload{
-  width: 25%;
+  width: 100%;
   right: 210px;
   bottom: 210px;
 }
@@ -93,6 +110,7 @@
 
 #datalist{
   height: fit-content;
+  width: 100%;
 }
 
 
