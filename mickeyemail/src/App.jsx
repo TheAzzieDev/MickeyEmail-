@@ -125,7 +125,7 @@ function App() {
           <ul>
             {dataList.map((item, index) => (
               <li key={index}>
-                {item} <input type="checkbox" onChange={() => handleCheckboxClick(index)}></input>
+                {item} <input type="checkbox" className="checkboxStyle" onChange={() => handleCheckboxClick(index)}></input>
               </li>
             ))}
           </ul>
