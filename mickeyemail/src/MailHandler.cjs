@@ -14,6 +14,7 @@ var text;
 //<img src = "cid:whatever" width = "400"/>
 var html;
 var data;
+var isSending;
 
 //const emails = [process.env.EMAIL_RECIEVER_1, process.env.EMAIL_RECIEVER_2];
 
@@ -126,7 +127,6 @@ async function sendMail() {
       endDate.toLocaleString()
   );
   if (sendDate - now < 0 && !firstMailSent) {
-    console.log("wut is dis1");
     for (let x = 0; x < data.length; x++) {
       subject = data[x].split(" - ")[1];
       html = data[x].split(" - ")[2];
@@ -145,11 +145,14 @@ async function sendMail() {
         main(subject, html, emails[x]).catch((e) => console.log(e));
     }
     IncreaseMail2(daysBetween);
+  } else if (endDate - now < 0) {
+    console.log("endDate has been reached");
+    clearInterval(isSending);
   }
 }
 
 function StartTimer() {
-  setInterval(sendMail, 2000);
+  isSending = setInterval(sendMail, 500);
 }
 
 app.post("/start", (req, res) => {
@@ -187,6 +190,10 @@ app.put("/UpdateEmails", async (req, res) => {
   console.log("emails have been updated" + emails);
   console.log("data hase been updated" + data);
   res.json({ response: "emails updated" });
+});
+app.delete("/ClearIntervall", (req, res) => {
+  clearInterval(isSending);
+  res.json({ response: "Intervall has been cleared" });
 });
 
 app.listen(PORT, () =>

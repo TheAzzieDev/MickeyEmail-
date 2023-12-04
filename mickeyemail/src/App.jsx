@@ -24,18 +24,22 @@ async function startFetch(props) {
   })
     .then((response) => response.json())
     .then((json) => console.log(json))
-    .then(localStorage.setItem("toggle", JSON.stringify(true)));
+    .then(localStorage.setItem("toggle", JSON.stringify(true)))
+    .then(window.location.reload(true));
 }
 
 //emails: uppdated email array
 function updateEmails() {
   //console.log(localStorage.getItem("Emails"));
   var emailtest;
-  if (!localStorage.getItem("Emails")) {
+  if (localStorage.getItem("Emails") == "undefined") {
+    console.log("hi");
     emailtest = "";
+    localStorage.setItem("Emails", []);
   } else {
     emailtest = JSON.parse(localStorage.getItem("Emails"));
   }
+
   fetch("http://localhost:8080/UpdateEmails", {
     method: "PUT",
     body: JSON.stringify({
@@ -45,6 +49,16 @@ function updateEmails() {
   })
     .then((response) => response.json())
     .then((json) => console.log(json));
+}
+
+function clearIntervall() {
+  fetch("http://localhost:8080/ClearIntervall", {
+    method: "DELETE",
+  })
+    .then((response) => response.json())
+    .then((json) => console.log(json))
+    .then(localStorage.setItem("toggle", JSON.stringify(false)))
+    .then(window.location.reload(true));
 }
 
 function getInput(props) {}
@@ -258,7 +272,8 @@ function App() {
   useEffect(() => {
     localStorage.setItem("Emails", JSON.stringify(emails));
     console.log("emails: " + emails);
-    if (JSON.parse(localStorage.getItem("toggle"))) {
+    if (localStorage.getItem("toggle")) {
+      console.log("heythere");
       updateEmails();
     }
   }, [emails]);
@@ -340,7 +355,12 @@ function App() {
             value={sendDate}
             onChange={handleSendDateTimeChange}
           />
-          <button onClick={startButtonClick}>Starta</button>
+          {!JSON.parse(localStorage.getItem("toggle")) && (
+            <button onClick={startButtonClick}>Starta</button>
+          )}
+          {JSON.parse(localStorage.getItem("toggle")) && (
+            <button onClick={() => clearIntervall()}>Stop</button>
+          )}
         </div>
 
         <div id="datalist">
