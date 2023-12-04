@@ -150,7 +150,7 @@ function App() {
 
           <div>
             <button id="send" onClick={handleButtonClick}>
-              Addemail
+              Lägg till
             </button>
           </div>
 
@@ -174,6 +174,12 @@ function App() {
             value={selectedDateTime}
             onChange={handleDateTimeChange}
           />
+          <h2>Börja utskick:</h2>
+          <input
+            type="datetime-local"
+            id="tiddatum"
+          />
+          <button>Starta</button>
         </div>
 
         <div id="datalist">
