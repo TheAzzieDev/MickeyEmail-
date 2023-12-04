@@ -23,15 +23,25 @@ async function startFetch(props) {
     }),
   })
     .then((response) => response.json())
-    .then((json) => console.log(json));
+    .then((json) => console.log(json))
+    .then(localStorage.setItem("toggle", JSON.stringify(true)));
 }
 
 //emails: uppdated email array
 function updateEmails() {
   //console.log(localStorage.getItem("Emails"));
-  fetch("http://localhost:8080/updateEmails", {
+  var emailtest;
+  if (!localStorage.getItem("Emails")) {
+    emailtest = "";
+  } else {
+    emailtest = JSON.parse(localStorage.getItem("Emails"));
+  }
+  fetch("http://localhost:8080/UpdateEmails", {
     method: "PUT",
-    body: JSON.stringify({ emails: localStorage.getItem("Emails") }),
+    body: JSON.stringify({
+      emails: emailtest,
+      data: JSON.parse(localStorage.getItem("dataList")),
+    }),
   })
     .then((response) => response.json())
     .then((json) => console.log(json));
@@ -44,12 +54,20 @@ function App() {
   const [inputData, setInputData] = useState("");
   const [inputData2, setInputData2] = useState("");
   const [inputData3, setInputData3] = useState("");
-  const [daysBetween, setDaysBetween] = useState();
+  const [toggle, setToggle] = useState(false);
+  const [daysBetween, setDaysBetween] = useState(() => {
+    const storedData = localStorage.getItem("daysBetween");
+    return storedData ? JSON.parse(storedData) : "";
+  });
   const [selectedDateTime, setSelectedDateTime] = useState(() => {
-    localStorage.getItem("endDate");
+    const storedData = localStorage.getItem("endDateCal");
+    return storedData ? JSON.parse(storedData) : "";
   });
   const [emails, setEmails] = useState();
-  const [sendDate, setSendDate] = useState();
+  const [sendDate, setSendDate] = useState(() => {
+    const storedData = localStorage.getItem("sendDateCal");
+    return storedData ? JSON.parse(storedData) : "";
+  });
   const [dataList, setDataList] = useState(() => {
     const storedData = localStorage.getItem("dataList");
     return storedData ? JSON.parse(storedData) : [];
@@ -79,6 +97,41 @@ function App() {
 
   //startButtonClick
   const startButtonClick = () => {
+    const selectedDate = new Date(selectedDateTime);
+    const selectedSendDate = new Date(sendDate);
+
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth() + 1;
+    const day = selectedDate.getDate();
+    const hour = selectedDate.getHours();
+    const minute = selectedDate.getMinutes();
+
+    const sendYear = selectedSendDate.getFullYear();
+    const sendMonth = selectedSendDate.getMonth() + 1;
+    const sendDay = selectedSendDate.getDate();
+    const sendHour = selectedSendDate.getHours();
+    const sendMinute = selectedSendDate.getMinutes();
+
+    console.log(
+      "endDate: " +
+        selectedDate.toLocaleString() +
+        " sendDate " +
+        selectedSendDate.toLocaleString()
+    );
+
+    localStorage.setItem(
+      "endDate",
+      JSON.stringify([year, month, day, hour, minute])
+    );
+
+    localStorage.setItem(
+      "sendDate",
+      JSON.stringify([sendYear, sendMonth, sendDay, sendHour, sendMinute])
+    );
+
+    localStorage.setItem("sendDateCal", JSON.stringify(sendDate));
+    localStorage.setItem("endDateCal", JSON.stringify(selectedDateTime));
+
     const mail = JSON.parse(localStorage.getItem("Emails"));
     const date1 = JSON.parse(localStorage.getItem("sendDate"));
     const date2 = JSON.parse(localStorage.getItem("endDate"));
@@ -92,7 +145,9 @@ function App() {
     const date2Days = JSON.parse(date2[2]);
     const date2Hours = JSON.parse(date2[3]);
     const date2Minutes = JSON.parse(date2[4]);
-    const intervall = daysBetween;
+    localStorage.setItem("daysBetween", JSON.stringify(daysBetween));
+    console.log(daysBetween);
+    const intervall = JSON.parse(localStorage.getItem("daysBetween"));
     const hours = date1Hours;
     const minutes = date1Minutes;
     const sendData = localStorage.getItem("dataList");
@@ -189,21 +244,23 @@ function App() {
     });
   };
 
+  //useEffects hooks
   useEffect(() => {
     localStorage.setItem("dataList", JSON.stringify(dataList));
     const data = JSON.parse(localStorage.getItem("dataList"));
-
     var thing = [];
     for (var x = 0; x < data.length; x++) {
       console.log("data at index: " + data[x].split(" - ")[0]);
       thing.push(data[x].split(" - ")[0]);
     }
-
     setEmails(thing);
   }, [dataList]);
   useEffect(() => {
     localStorage.setItem("Emails", JSON.stringify(emails));
     console.log("emails: " + emails);
+    if (JSON.parse(localStorage.getItem("toggle"))) {
+      updateEmails();
+    }
   }, [emails]);
 
   return (
@@ -266,14 +323,16 @@ function App() {
             value={selectedDateTime}
             onChange={handleDateTimeChange}
           />
-          <div>Intervall</div>
-          <input
-            type="text"
-            id="daysBetween"
-            style={{ width: "1rem" }}
-            value={daysBetween}
-            onChange={(e) => setDaysBetween(e.target.value)}
-          ></input>
+          <div style={{ marginTop: "20px" }}>
+            <p1>Intervall: </p1>
+            <input
+              type="text"
+              id="daysBetween"
+              style={{ width: "1rem" }}
+              value={daysBetween}
+              onChange={(e) => setDaysBetween(e.target.value)}
+            ></input>
+          </div>
           <h2>Börja utskick:</h2>
           <input
             type="datetime-local"

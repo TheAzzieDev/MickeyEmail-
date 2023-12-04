@@ -25,6 +25,10 @@ console.log(
     " " +
     process.env.EMAIL_APP_PASS
 );
+//debugTest
+async function main2(subject, html, email) {
+  console.log("email: " + email);
+}
 async function main(subject, html, email) {
   const transponder = test.createTransport({
     host: process.env.HOST,
@@ -45,17 +49,6 @@ async function main(subject, html, email) {
     to: email,
     subject: subject,
     html: html,
-    attachments: [
-      {
-        filename: "O betlehem.png",
-        path: "/Users/jonathan.canosjoste/Downloads/O betlehem.png",
-        cid: "whatever",
-      },
-      {
-        filename: "cat2.jpg",
-        path: "./assets/cat2.jpg",
-      },
-    ],
   });
   console.log("message sent: " + info.messageId);
   console.log("accepted: " + info.accepted);
@@ -136,32 +129,30 @@ async function sendMail() {
     console.log("wut is dis1");
     for (let x = 0; x < data.length; x++) {
       subject = data[x].split(" - ")[1];
-      emails = data[x].split(" - ")[0];
       html = data[x].split(" - ")[2];
-      main(subject, html, emails).catch((e) => console.log(e));
-      console.log(emails);
+      if (emails.length != 0)
+        main(subject, html, emails[x]).catch((e) => console.log(e));
     }
     IncreaseMail2(daysBetween);
     firstMailSent = true;
   } else if (sendDate - now < 0 && firstMailSent && !(endDate - now < 0)) {
-    console.log("wut is dis2");
     for (let x = 0; x < data.length; x++) {
-      subject = data[x].split(" - ")[1];
-      emails = data[x].split(" - ")[0];
+      subject = data[x].split("  - ")[1];
+
       html = data[x].split(" - ")[2];
       //console.log(emails + " " + subject + " " + html + " index: " + x);
-      main(subject, html, emails).catch((e) => console.log(e));
+      if (emails.length != 0)
+        main(subject, html, emails[x]).catch((e) => console.log(e));
     }
     IncreaseMail2(daysBetween);
   }
 }
 
 function StartTimer() {
-  setInterval(sendMail, 500);
+  setInterval(sendMail, 2000);
 }
 
 app.post("/start", (req, res) => {
-  //console.log("dataGot:  " + req.body);
   endDate = new Date();
   sendDate = new Date();
   now = new Date();
@@ -174,10 +165,12 @@ app.post("/start", (req, res) => {
   sendDate.setMonth(JSON.parse(req.body).sendDateMonth - 1);
   sendDate.setDate(JSON.parse(req.body).sendDateDay);
 
-  daysBetween = JSON.parse(req.body).daysBetween;
+  daysBetween = parseInt(JSON.parse(req.body).daysBetween);
+
   hours = JSON.parse(req.body).hours;
   minutes = JSON.parse(req.body).minutes;
   emails = JSON.parse(req.body).emails;
+  //console.log(emails);
   data = JSON.parse(req.body).data;
   data = JSON.parse(data);
   console.log(
@@ -190,6 +183,9 @@ app.post("/start", (req, res) => {
 
 app.put("/UpdateEmails", async (req, res) => {
   emails = await JSON.parse(req.body).emails;
+  data = await JSON.parse(req.body).data;
+  console.log("emails have been updated" + emails);
+  console.log("data hase been updated" + data);
   res.json({ response: "emails updated" });
 });
 
