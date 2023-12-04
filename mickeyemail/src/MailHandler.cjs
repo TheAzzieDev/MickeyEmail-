@@ -13,6 +13,7 @@ var subject;
 var text;
 //<img src = "cid:whatever" width = "400"/>
 var html;
+var data;
 
 //const emails = [process.env.EMAIL_RECIEVER_1, process.env.EMAIL_RECIEVER_2];
 
@@ -24,7 +25,7 @@ console.log(
     " " +
     process.env.EMAIL_APP_PASS
 );
-async function main() {
+async function main(subject, html, email) {
   const transponder = test.createTransport({
     host: process.env.HOST,
     port: 465,
@@ -41,7 +42,7 @@ async function main() {
   //html: html
   const info = await transponder.sendMail({
     from: process.env.EMAIL_RECIEVER_1,
-    to: emails,
+    to: email,
     subject: subject,
     html: html,
     attachments: [
@@ -132,21 +133,35 @@ async function sendMail() {
       endDate.toLocaleString()
   );
   if (sendDate - now < 0 && !firstMailSent) {
-    main().catch((e) => console.log(e));
+    console.log("wut is dis1");
+    for (let x = 0; x < data.length; x++) {
+      subject = data[x].split(" - ")[1];
+      emails = data[x].split(" - ")[0];
+      html = data[x].split(" - ")[2];
+      main(subject, html, emails).catch((e) => console.log(e));
+      console.log(emails);
+    }
     IncreaseMail2(daysBetween);
     firstMailSent = true;
   } else if (sendDate - now < 0 && firstMailSent && !(endDate - now < 0)) {
-    main().catch((e) => console.log(e));
+    console.log("wut is dis2");
+    for (let x = 0; x < data.length; x++) {
+      subject = data[x].split(" - ")[1];
+      emails = data[x].split(" - ")[0];
+      html = data[x].split(" - ")[2];
+      //console.log(emails + " " + subject + " " + html + " index: " + x);
+      main(subject, html, emails).catch((e) => console.log(e));
+    }
     IncreaseMail2(daysBetween);
   }
 }
 
 function StartTimer() {
-  setInterval(sendMail, 1000);
+  setInterval(sendMail, 500);
 }
 
 app.post("/start", (req, res) => {
-  console.log(req.body);
+  //console.log("dataGot:  " + req.body);
   endDate = new Date();
   sendDate = new Date();
   now = new Date();
@@ -163,10 +178,12 @@ app.post("/start", (req, res) => {
   hours = JSON.parse(req.body).hours;
   minutes = JSON.parse(req.body).minutes;
   emails = JSON.parse(req.body).emails;
-  subject = JSON.parse(req.body).subject;
-  text = JSON.parse(req.body).text;
-  html = `<div>${text}</div>`;
-  console.log("subject: " + subject);
+  data = JSON.parse(req.body).data;
+  data = JSON.parse(data);
+  console.log(
+    `endDate: ${endDate.toLocaleString()} sendDate: ${sendDate.toLocaleString()} + data: ${data} daysbetween: ${daysBetween} hours: ${hours} minutes: ${minutes} emails: ${emails}`
+  );
+
   res.json({ cred: "crediantials has been processed" });
   StartTimer();
 });
