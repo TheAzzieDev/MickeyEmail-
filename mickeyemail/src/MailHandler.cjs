@@ -1,19 +1,29 @@
-require("dotenv/config");
-
+require("dotenv").config();
 const test = require("nodemailer");
 const express = require("express");
 const app = express();
 const PORT = 8080;
 app.use(require("cors")());
 
-app.use(express.json());
+app.use(express.text());
 
-const html = `
-    <h1>hello</h1>
-    <img src = "cid:whatever" width = "400"/>
-    <div>wasssuup<div>
-    `;
-const emails = [process.env.EMAIL_RECIEVER_1, process.env.EMAIL_RECIEVER_2];
+//Email vars
+var emails;
+var subject;
+var text;
+//<img src = "cid:whatever" width = "400"/>
+var html;
+
+//const emails = [process.env.EMAIL_RECIEVER_1, process.env.EMAIL_RECIEVER_2];
+
+const hey = process.env.HOST;
+console.log(
+  process.env.HOST +
+    " " +
+    process.env.EMAIL_ADRESS +
+    " " +
+    process.env.EMAIL_APP_PASS
+);
 async function main() {
   const transponder = test.createTransport({
     host: process.env.HOST,
@@ -28,20 +38,21 @@ async function main() {
   //html är innehållet av meddelandet
   //för att lägga bilden som en attachment ange inte ett cid och lägg den inte i html variablen
   //för attt lägga bild i meddelendet lägg ett cid och sedan bild tag som som innehåller cid innuti src taggen.
+  //html: html
   const info = await transponder.sendMail({
     from: process.env.EMAIL_RECIEVER_1,
     to: emails,
-    subject: "hey, hello",
+    subject: subject,
     html: html,
     attachments: [
       {
-        filename: "cat.jpg",
-        path: "./src/assets/cat.jpg",
+        filename: "O betlehem.png",
+        path: "/Users/jonathan.canosjoste/Downloads/O betlehem.png",
         cid: "whatever",
       },
       {
         filename: "cat2.jpg",
-        path: "./src/assets/cat2.jpg",
+        path: "./assets/cat2.jpg",
       },
     ],
   });
@@ -62,13 +73,16 @@ var months;
 var years;
 
 function SetSendDates(dagar, dayvar) {
+  //annoying ass bugfix, becuase i forgot convert to integer.
+  dagar = parseInt(dagar);
   days =
     sendDate.getDate() + dagar > dayvar
       ? sendDate.getDate() + dagar - dayvar
       : sendDate.getDate() + dagar;
-
   if (sendDate.getDate() + dagar > dayvar) {
     months = sendDate.getMonth() + 1 > 12 ? 0 : sendDate.getMonth() + 1;
+  } else {
+    months = sendDate.getMonth();
   }
   years =
     sendDate.getMonth() + 1 > 11 && sendDate.getDate() + dagar > dayvar
@@ -112,8 +126,10 @@ async function sendMail() {
   now.setDate(now.getDate() + 1);
   console.log(
     now.toLocaleString() +
-      " loop should have ended " +
-      sendDate.toLocaleString()
+      " SendDate " +
+      sendDate.toLocaleString() +
+      " endDate " +
+      endDate.toLocaleString()
   );
   if (sendDate - now < 0 && !firstMailSent) {
     main().catch((e) => console.log(e));
@@ -121,35 +137,43 @@ async function sendMail() {
     firstMailSent = true;
   } else if (sendDate - now < 0 && firstMailSent && !(endDate - now < 0)) {
     main().catch((e) => console.log(e));
-    console.log(sendDate.toLocaleString());
     IncreaseMail2(daysBetween);
   }
 }
 
 function StartTimer() {
-  setInterval(sendMail, 700);
+  setInterval(sendMail, 1000);
 }
 
 app.post("/start", (req, res) => {
-  console.log(JSON.parse(req.body));
+  console.log(req.body);
   endDate = new Date();
   sendDate = new Date();
   now = new Date();
 
   endDate.setFullYear(JSON.parse(req.body).endDateYear);
-  endDate.setMonth(JSON.parse(req.body).endDateMonth);
+  endDate.setMonth(JSON.parse(req.body).endDateMonth - 1);
   endDate.setDate(JSON.parse(req.body).endDateDay);
 
   sendDate.setFullYear(JSON.parse(req.body).sendDateYear);
-  sendDate.setMonth(JSON.parse(req.body).sendDateMonth);
+  sendDate.setMonth(JSON.parse(req.body).sendDateMonth - 1);
   sendDate.setDate(JSON.parse(req.body).sendDateDay);
 
-  console.log(" " + sendDate.toLocaleString());
   daysBetween = JSON.parse(req.body).daysBetween;
   hours = JSON.parse(req.body).hours;
   minutes = JSON.parse(req.body).minutes;
+  emails = JSON.parse(req.body).emails;
+  subject = JSON.parse(req.body).subject;
+  text = JSON.parse(req.body).text;
+  html = `<div>${text}</div>`;
+  console.log("subject: " + subject);
   res.json({ cred: "crediantials has been processed" });
   StartTimer();
+});
+
+app.put("/UpdateEmails", async (req, res) => {
+  emails = await JSON.parse(req.body).emails;
+  res.json({ response: "emails updated" });
 });
 
 app.listen(PORT, () =>
