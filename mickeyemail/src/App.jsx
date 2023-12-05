@@ -369,11 +369,12 @@ function App() {
             {dataList.map((item, index) => (
               <li key={index}>
                 {item}{" "}
-                <input
+                <button onClick={()=>handleCheckboxClick(index)}>&#x1F5D1;</button>
+                {/*<input
                   type="checkbox"
                   className="checkboxStyle"
                   onChange={() => handleCheckboxClick(index)}
-                ></input>
+            ></input>*/}
               </li>
             ))}
           </ul>
